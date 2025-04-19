@@ -1,31 +1,50 @@
 import { clientConfig, serverConfig } from "@/lib/config";
-// import { Button } from "@mui/material";
 import { getTokens } from "next-firebase-auth-edge";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Button, ButtonBase, Container, Typography } from "@mui/material";
+import { revalidatePath } from "next/cache";
+import Logout from "@/components/logout";
 
 export default async function Home() {
-  const the_cookies = await cookies();
-  const tokens = await getTokens(the_cookies, {
+  const tokens = await getTokens(await cookies(), {
     apiKey: clientConfig.apiKey,
     cookieName: serverConfig.cookieName,
     cookieSignatureKeys: serverConfig.cookieSignatureKeys,
     serviceAccount: serverConfig.serviceAccount,
   });
 
-  if (!tokens) {
-    notFound();
-  }
-
   return (
-    <Container style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '6rem' }}>
+    <Container
+      style={{
+        display: "flex",
+        minHeight: "100vh",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "6rem",
+      }}
+    >
       <Typography variant="h4" sx={{ mb: 2 }}>
-        Super secure home page
+        Super Secure Home Page
       </Typography>
-      <Typography variant="body1">
-        Only <Box component="strong">{tokens?.decodedToken.email}</Box> holds the magic key to this kingdom!
-      </Typography>
+      {tokens ? (
+        <Box sx={{ textAlign: "center" }}>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            Only <Box component="strong">{tokens?.decodedToken.email}</Box> holds the magic key to this kingdom!
+          </Typography>
+          <Logout />
+        </Box>
+      ) : (
+        <Box sx={{ textAlign: "center" }}>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            Please log in to access this page.
+          </Typography>
+          <Button variant="contained" href="/login">
+            Login
+          </Button>
+        </Box>
+      )}
     </Container>
   );
 }
