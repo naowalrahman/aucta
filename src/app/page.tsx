@@ -1,9 +1,7 @@
 import { clientConfig, serverConfig } from "@/lib/config";
 import { getTokens } from "next-firebase-auth-edge";
 import { cookies } from "next/headers";
-import { notFound } from "next/navigation";
-import { Box, Button, ButtonBase, Container, Typography } from "@mui/material";
-import { revalidatePath } from "next/cache";
+import { Box, Button, Container, Typography } from "@mui/material";
 import Logout from "@/components/logout";
 
 export default async function Home() {
