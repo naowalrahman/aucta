@@ -1,11 +1,12 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { clientApp } from "@/lib/firebase";
+import { clientApp, clientAuth } from "@/lib/firebase";
 import { Alert, Box, Button, Container, Link as MuiLink, Paper, TextField, Typography } from "@mui/material";
 import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -18,7 +19,7 @@ export default function Login() {
     setError("");
 
     try {
-      const credential = await signInWithEmailAndPassword(getAuth(clientApp), email, password);
+      const credential = await signInWithEmailAndPassword(clientAuth, email, password);
       const idToken = await credential.user.getIdToken();
 
       await fetch("/api/login", {
@@ -28,6 +29,7 @@ export default function Login() {
       });
 
       router.push("/");
+      router.refresh();
     } catch (e) {
       setError((e as Error).message);
     }
