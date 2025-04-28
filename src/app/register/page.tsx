@@ -6,29 +6,46 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { clientApp } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { Alert, Box, Button, Container, Link as MuiLink, Paper, TextField, Typography } from "@mui/material";
+import { createOrUpdateUserProfile } from "@/lib/database";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-
     setError("");
+    setIsLoading(true);
 
     if (password !== confirmation) {
       setError("Passwords don't match");
+      setIsLoading(false);
       return;
     }
 
     try {
-      await createUserWithEmailAndPassword(getAuth(clientApp), email, password);
-      router.push("/login");
+      const credential = await createUserWithEmailAndPassword(getAuth(clientApp), email, password);
+      try {
+        await createOrUpdateUserProfile(credential.user.uid, {
+          uid: credential.user.uid,
+          email: email,
+          displayName: email.split("@")[0],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        });
+      } catch (e) {
+        console.error("Error creating user profile:", e);
+        setError((e as Error).message);
+      }
+      router.push("/");
     } catch (e) {
+      console.error("Error during registration:", e);
       setError((e as Error).message);
+      setIsLoading(false);
     }
   }
 
@@ -62,6 +79,7 @@ export default function Register() {
             fullWidth
             required
             variant="outlined"
+            disabled={isLoading}
           />
 
           <TextField
@@ -72,6 +90,7 @@ export default function Register() {
             fullWidth
             required
             variant="outlined"
+            disabled={isLoading}
           />
 
           <TextField
@@ -82,6 +101,7 @@ export default function Register() {
             fullWidth
             required
             variant="outlined"
+            disabled={isLoading}
           />
 
           {error && (
@@ -95,6 +115,7 @@ export default function Register() {
             variant="contained"
             fullWidth
             size="large"
+            disabled={isLoading}
             sx={{
               mt: 2,
               py: 1.5,
@@ -102,7 +123,7 @@ export default function Register() {
               "&:hover": { bgcolor: "grey.800" },
             }}
           >
-            Create an account
+            {isLoading ? "Creating account..." : "Create an account"}
           </Button>
 
           <Box sx={{ mt: 2, textAlign: "center" }}>
