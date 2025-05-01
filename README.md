@@ -2,7 +2,7 @@
 
 (Work in Progress)
 
-Aucta is a web platform for hosting and participating in real-time auctions.
+Aucta is a web platform for hosting and participating in real-time auctions. You can create auctions with start and end dates, provide a URL to an image of what you're auctioning, place bids, and see realtime updates to the bid price on the bid page!
 
 ## Features
 
@@ -18,7 +18,7 @@ Aucta is a web platform for hosting and participating in real-time auctions.
 - [React](https://react.dev)
 - [Firebase](https://firebase.google.com) for authentication and database
 - [Material UI](https://mui.com) for component styling
-- [TypeScript](https://www.typescriptlang.org) for type safety
+- [TypeScript](https://www.typescriptlang.org)
 
 ## Getting Started
 
