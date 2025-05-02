@@ -1,6 +1,11 @@
 import { Container, Typography, Box, Grid, Card, CardContent, Button, Stack, Chip, Divider } from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
+import CodeIcon from "@mui/icons-material/Code";
+import JavascriptIcon from "@mui/icons-material/Javascript";
+import StorageIcon from "@mui/icons-material/Storage";
+import WebIcon from "@mui/icons-material/Web";
+import LanguageIcon from "@mui/icons-material/Language";
 
 function FeatureCard({ title, description, icon }: { title: string; description: string; icon: string }) {
   return (
@@ -35,9 +40,10 @@ function FeatureCard({ title, description, icon }: { title: string; description:
 }
 
 // TODO: add logos for each tech stack item
-function TechStackItem({ name }: { name: string }) {
+function TechStackItem({ name, icon }: { name: string; icon: React.ReactElement }) {
   return (
     <Chip
+      icon={icon}
       label={name}
       variant="outlined"
       sx={{
@@ -190,11 +196,11 @@ export default function Home() {
             </Typography>
 
             <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 1 }}>
-              <TechStackItem name="Next.js" />
-              <TechStackItem name="React" />
-              <TechStackItem name="Firebase" />
-              <TechStackItem name="Material UI" />
-              <TechStackItem name="TypeScript" />
+              <TechStackItem name="Next.js" icon={<WebIcon />} />
+              <TechStackItem name="React" icon={<CodeIcon />} />
+              <TechStackItem name="Firebase" icon={<StorageIcon />} />
+              <TechStackItem name="Material UI" icon={<WebIcon />} />
+              <TechStackItem name="TypeScript" icon={<JavascriptIcon />} />
             </Box>
           </Box>
 
