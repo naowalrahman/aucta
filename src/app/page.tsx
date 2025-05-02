@@ -5,7 +5,6 @@ import CodeIcon from "@mui/icons-material/Code";
 import JavascriptIcon from "@mui/icons-material/Javascript";
 import StorageIcon from "@mui/icons-material/Storage";
 import WebIcon from "@mui/icons-material/Web";
-import LanguageIcon from "@mui/icons-material/Language";
 
 function FeatureCard({ title, description, icon }: { title: string; description: string; icon: string }) {
   return (
