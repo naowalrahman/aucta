@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
       });
 
       if (tokens) {
-        return NextResponse.redirect(new URL("/", request.url));
+        return NextResponse.redirect(new URL("/dashboard", request.url));
       }
     } catch (error) {
       console.error("Auth token verification error:", error);

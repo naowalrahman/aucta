@@ -229,7 +229,7 @@ export default function AuctionDetails({
 
       <Grid container spacing={4}>
         {/* Left column: Image and details */}
-        <Grid>
+        <Grid size={{ xs: 12, md: 7, lg: 8 }}>
           <Card elevation={2}>
             <CardMedia
               component="img"
@@ -290,14 +290,14 @@ export default function AuctionDetails({
               <Divider sx={{ mb: 3 }} />
 
               <Grid container spacing={2}>
-                <Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Typography variant="subtitle2" color="text.secondary">
                     Start Date
                   </Typography>
                   <Typography variant="body1">{formatDate(auction.startDate)}</Typography>
                 </Grid>
 
-                <Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Typography variant="subtitle2" color="text.secondary">
                     End Date
                   </Typography>
@@ -309,7 +309,7 @@ export default function AuctionDetails({
         </Grid>
 
         {/* Right column: Bid information and form */}
-        <Grid>
+        <Grid size={{ xs: 12, md: 5, lg: 4 }}>
           <Card elevation={2}>
             <CardContent>
               <Typography variant="h5" gutterBottom>

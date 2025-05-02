@@ -41,7 +41,7 @@ export default function Register() {
         console.error("Error creating user profile:", e);
         setError((e as Error).message);
       }
-      router.push("/");
+      router.push("/login");
     } catch (e) {
       console.error("Error during registration:", e);
       setError((e as Error).message);
