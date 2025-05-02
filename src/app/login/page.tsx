@@ -1,12 +1,11 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { redirect, useRouter } from "next/navigation";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { clientApp, clientAuth } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { clientAuth } from "@/lib/firebase";
 import { Alert, Box, Button, Container, Link as MuiLink, Paper, TextField, Typography } from "@mui/material";
 import Link from "next/link";
-import { useAuth } from "@/lib/auth-context";
 
 export default function Login() {
   const [email, setEmail] = useState("");

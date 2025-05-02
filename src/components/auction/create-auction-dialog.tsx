@@ -8,7 +8,6 @@ import {
   DialogActions,
   Button,
   TextField,
-  Box,
   Grid,
   InputAdornment,
   Typography,

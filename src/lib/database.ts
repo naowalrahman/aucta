@@ -151,23 +151,7 @@ export async function deleteAuction(auctionId: string, userId: string) {
   }
 }
 
-export async function listAuctions(limit = 20, startAfter?: any) {
-  try {
-    let query = database.collection("auctions").orderBy("createdAt", "desc").limit(limit);
-
-    if (startAfter) {
-      query = query.startAfter(startAfter);
-    }
-
-    const snapshot = await query.get();
-    return snapshot.docs.map((doc) => doc.data() as Auction);
-  } catch (error) {
-    console.error("Error listing auctions:", error);
-    throw new Error("Failed to list auctions");
-  }
-}
-
-export async function getUserAuctions(userId: string) {
+export async function getUserHostedAuctions(userId: string) {
   try {
     const userAuctionsRef = database.collection("userAuctions").doc(userId).collection("auctions");
 
@@ -317,5 +301,85 @@ export async function getUserBids(userId: string) {
   } catch (error) {
     console.error("Error getting user bids:", error);
     throw new Error("Failed to get user bids");
+  }
+}
+
+export async function getUserParticipatedAuctions(userId: string) {
+  try {
+    const userBids = await getUserBids(userId);
+
+    if (!userBids.length) {
+      return [];
+    }
+
+    const auctionIds = Array.from(new Set(userBids.map((bid) => bid.auctionId)));
+
+    // Get all auctions in batches (Firestore has a limit of 10 for "in" queries)
+    const batchSize = 10;
+    const batches = [];
+
+    for (let i = 0; i < auctionIds.length; i += batchSize) {
+      const batch = auctionIds.slice(i, i + batchSize);
+      batches.push(batch);
+    }
+
+    const results = await Promise.all(
+      batches.map((batch) =>
+        database
+          .collection("auctions")
+          .where("id", "in", batch)
+          .get()
+          .then((snap) => snap.docs.map((doc) => doc.data() as Auction))
+      )
+    );
+
+    return results.flat();
+  } catch (error) {
+    console.error("Error getting user participated auctions:", error);
+    throw new Error("Failed to get user participated auctions");
+  }
+}
+
+export async function getPaginatedAuctions(
+  limit = 20,
+  startAfter?: { createdAt: number } | FirebaseFirestore.DocumentSnapshot
+) {
+  try {
+    let query = database
+      .collection("auctions")
+      .where("status", "==", "active")
+      .orderBy("createdAt", "desc")
+      .limit(limit);
+
+    if (startAfter) {
+      query = query.startAfter(startAfter);
+    }
+
+    const snapshot = await query.get();
+    const lastVisible = snapshot.docs.length > 0 ? snapshot.docs[snapshot.docs.length - 1] : null;
+
+    return {
+      auctions: snapshot.docs.map((doc) => doc.data() as Auction),
+      lastVisible,
+      hasMore: snapshot.docs.length === limit,
+    };
+  } catch (error) {
+    console.error("Error getting paginated auctions:", error);
+    throw new Error("Failed to get paginated auctions");
+  }
+}
+
+export async function loadMoreAuctions(timestamp: number) {
+  try {
+    const startAfter = { createdAt: timestamp };
+    const result = await getPaginatedAuctions(20, startAfter);
+
+    return {
+      auctions: result.auctions,
+      hasMore: result.hasMore,
+    };
+  } catch (error) {
+    console.error("Server action error getting more auctions:", error);
+    throw new Error("Failed to load more auctions");
   }
 }

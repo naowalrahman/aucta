@@ -1,141 +1,103 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/auth-context";
-import { Container, Typography, Box, Button, Grid, CircularProgress } from "@mui/material";
-import { listAuctions, getUserAuctions } from "@/lib/database";
+import { Suspense } from "react";
+import { Container, Typography, Box, Button, CircularProgress } from "@mui/material";
+import { getUserHostedAuctions, getUserParticipatedAuctions } from "@/lib/database";
 import { Auction } from "@/lib/database-types";
-import AuctionCard from "@/components/auction/auction-card";
-import CreateAuctionDialog from "@/components/auction/create-auction-dialog";
-import AddIcon from "@mui/icons-material/Add";
+import DashboardClient from "./dashboard-client";
+import { getAuthData } from "@/components/auth-provider-wrapper";
+import AuctionsGrid from "@/components/auction/auction-grid";
 
-export default function DashboardPage() {
-  const { user, isAuthenticated } = useAuth();
-  const [activeTab, setActiveTab] = useState<"all" | "my">("all");
-  const [auctions, setAuctions] = useState<Auction[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const tab = (await searchParams).tab === "host" ? "host" : "participate";
 
-  useEffect(() => {
-    async function loadAuctions() {
-      setLoading(true);
-      try {
-        if (activeTab === "all") {
-          const allAuctions = await listAuctions();
-          setAuctions(allAuctions);
-        } else if (activeTab === "my" && user?.uid) {
-          const myAuctions = await getUserAuctions(user.uid);
-          setAuctions(myAuctions);
-        }
-      } catch (error) {
-        console.error("Error loading auctions:", error);
-      } finally {
-        setLoading(false);
-      }
+  try {
+    const { user, isAuthenticated } = await getAuthData();
+
+    if (!isAuthenticated || !user?.uid) {
+      return (
+        <Container maxWidth="md" sx={{ mt: 8, textAlign: "center" }}>
+          <Typography variant="h5" component="h1" gutterBottom>
+            Please login to view your dashboard
+          </Typography>
+        </Container>
+      );
     }
 
-    loadAuctions();
-  }, [activeTab, user?.uid]);
+    let auctions: Auction[] = [];
 
-  if (!isAuthenticated && activeTab === "my") {
+    if (tab === "host") {
+      auctions = await getUserHostedAuctions(user.uid);
+    } else {
+      auctions = await getUserParticipatedAuctions(user.uid);
+    }
+
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 8 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            justifyContent: "space-between",
+            alignItems: { xs: "flex-start", sm: "center" },
+            gap: { xs: 2, sm: 0 },
+            mb: 4,
+          }}
+        >
+          <Typography variant="h4" component="h1" fontWeight="bold" sx={{ mb: { xs: 2, sm: 0 } }}>
+            Auctions Dashboard
+          </Typography>
+
+          <Suspense>
+            <DashboardClient />
+          </Suspense>
+        </Box>
+
+        <Box sx={{ mb: 4 }}>
+          <Button
+            variant={tab === "participate" ? "contained" : "outlined"}
+            href="/dashboard?tab=participate"
+            sx={{ mr: 2 }}
+          >
+            Participating Auctions
+          </Button>
+          <Button variant={tab === "host" ? "contained" : "outlined"} href="/dashboard?tab=host">
+            Hosting Auctions
+          </Button>
+        </Box>
+
+        <Suspense
+          fallback={
+            <Box sx={{ display: "flex", justifyContent: "center", my: 8 }}>
+              <CircularProgress />
+            </Box>
+          }
+        >
+          {auctions.length > 0 ? <AuctionsGrid auctions={auctions} /> : <EmptyState tab={tab} />}
+        </Suspense>
+      </Container>
+    );
+  } catch (error) {
+    console.error("Dashboard error:", error);
     return (
       <Container maxWidth="md" sx={{ mt: 8, textAlign: "center" }}>
-        <Typography variant="h5" component="h1" gutterBottom>
-          Please login to view your auctions
+        <Typography variant="h5" component="h1" color="error" gutterBottom>
+          Error loading dashboard
         </Typography>
+        <Typography>Please try again later.</Typography>
       </Container>
     );
   }
+}
 
+function EmptyState({ tab }: { tab: string }) {
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 8 }}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          justifyContent: "space-between",
-          alignItems: { xs: "flex-start", sm: "center" },
-          gap: { xs: 2, sm: 0 },
-          mb: 4,
-        }}
-      >
-        <Typography variant="h4" component="h1" fontWeight="bold" sx={{ mb: { xs: 2, sm: 0 } }}>
-          Auctions Dashboard
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={() => setOpenCreateDialog(true)}
-          fullWidth={false}
-          sx={{ alignSelf: { xs: "stretch", sm: "auto" } }}
-        >
-          Create Auction
-        </Button>
-      </Box>
-
-      <Box sx={{ mb: 4 }}>
-        <Button
-          variant={activeTab === "all" ? "contained" : "outlined"}
-          onClick={() => setActiveTab("all")}
-          sx={{ mr: 2 }}
-        >
-          All Auctions
-        </Button>
-        <Button variant={activeTab === "my" ? "contained" : "outlined"} onClick={() => setActiveTab("my")}>
-          My Auctions
-        </Button>
-      </Box>
-
-      {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", my: 8 }}>
-          <CircularProgress />
-        </Box>
-      ) : auctions.length > 0 ? (
-        <Grid container spacing={3}>
-          {auctions.map((auction) => (
-            <Grid
-              key={auction.id}
-              sx={{
-                width: {
-                  xs: "100%",
-                  sm: "50%",
-                  md: "33.333%",
-                  lg: "25%",
-                },
-                // padding: 1.5, // Half of spacing={3} on each side
-              }}
-            >
-              <AuctionCard auction={auction} />
-            </Grid>
-          ))}
-        </Grid>
-      ) : (
-        <Box textAlign="center" my={8}>
-          <Typography variant="h6" color="text.secondary">
-            {activeTab === "all" ? "No auctions found" : "You haven't created any auctions yet"}
-          </Typography>
-          {activeTab === "my" && (
-            <Button variant="contained" color="primary" sx={{ mt: 2 }} onClick={() => setOpenCreateDialog(true)}>
-              Create Your First Auction
-            </Button>
-          )}
-        </Box>
-      )}
-
-      <CreateAuctionDialog
-        open={openCreateDialog}
-        onClose={() => setOpenCreateDialog(false)}
-        onSuccess={() => {
-          setOpenCreateDialog(false);
-          // Reload auctions after creation
-          if (activeTab === "my" && user?.uid) {
-            getUserAuctions(user.uid).then(setAuctions);
-          } else {
-            listAuctions().then(setAuctions);
-          }
-        }}
-      />
-    </Container>
+    <Box sx={{ textAlign: "center", my: 8 }}>
+      <Typography variant="h6" color="text.secondary">
+        {tab === "participate" ? "You're not participating in any auctions yet" : "You haven't hosted any auctions yet"}
+      </Typography>
+    </Box>
   );
 }
