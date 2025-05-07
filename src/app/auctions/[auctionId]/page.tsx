@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getAuction, getAuctionBids, getUserProfile } from "@/lib/database";
-import AuctionDetails from "./auction-details";
+import AuctionDetails from "@/components/auction/auction-details";
 import { Suspense } from "react";
 import { Box, CircularProgress, Container, Typography } from "@mui/material";
 

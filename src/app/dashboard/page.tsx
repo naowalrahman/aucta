@@ -1,10 +1,11 @@
 import { Suspense } from "react";
-import { Container, Typography, Box, Button, CircularProgress } from "@mui/material";
+import { Container, Typography, Box, CircularProgress } from "@mui/material";
 import { getUserHostedAuctions, getUserParticipatedAuctions } from "@/lib/database";
 import { Auction } from "@/lib/database-types";
-import DashboardClient from "./dashboard-client";
+import DashboardClient from "@/components/dashboard/dashboard-client";
 import { getAuthData } from "@/components/auth-provider-wrapper";
 import AuctionsGrid from "@/components/auction/auction-grid";
+import { TabPicker } from "@/components/dashboard/tab-switcher";
 
 export default async function DashboardPage({
   searchParams,
@@ -55,18 +56,7 @@ export default async function DashboardPage({
           </Suspense>
         </Box>
 
-        <Box sx={{ mb: 4 }}>
-          <Button
-            variant={tab === "participate" ? "contained" : "outlined"}
-            href="/dashboard?tab=participate"
-            sx={{ mr: 2 }}
-          >
-            Participating Auctions
-          </Button>
-          <Button variant={tab === "host" ? "contained" : "outlined"} href="/dashboard?tab=host">
-            Hosting Auctions
-          </Button>
-        </Box>
+        <TabPicker tab={tab} />
 
         <Suspense
           fallback={
@@ -75,7 +65,7 @@ export default async function DashboardPage({
             </Box>
           }
         >
-          {auctions.length > 0 ? <AuctionsGrid auctions={auctions} /> : <EmptyState tab={tab} />}
+          {auctions.length > 0 ? <AuctionsGrid auctions={auctions} /> : <EmptyState />}
         </Suspense>
       </Container>
     );
@@ -92,11 +82,11 @@ export default async function DashboardPage({
   }
 }
 
-function EmptyState({ tab }: { tab: string }) {
+function EmptyState() {
   return (
     <Box sx={{ textAlign: "center", my: 8 }}>
       <Typography variant="h6" color="text.secondary">
-        {tab === "participate" ? "You're not participating in any auctions yet" : "You haven't hosted any auctions yet"}
+        No auctions in this category yet.
       </Typography>
     </Box>
   );

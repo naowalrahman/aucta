@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { Container, Typography, Box, Button, CircularProgress } from "@mui/material";
 import { getPaginatedAuctions } from "@/lib/database";
 import Link from "next/link";
-import AuctionsClient from "./auctions-client";
+import AuctionsClient from "@/components/auction/auctions-client";
 import AuctionsGrid from "@/components/auction/auction-grid";
 
 export default async function AuctionsPage() {

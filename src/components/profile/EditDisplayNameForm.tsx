@@ -74,6 +74,9 @@ export default function EditDisplayNameForm({
           Save
         </Button>
       </Box>
+      <Box sx={{ mt: 2 }}>
+        <Alert severity="info">Your new display name will only be reflected on future bids.</Alert>
+      </Box>
     </Box>
   );
 }

@@ -86,6 +86,7 @@ export default function AuctionCardClient({
               WebkitLineClamp: 2,
               WebkitBoxOrient: "vertical",
               mb: 2,
+              minHeight: "3em",
             }}
           >
             {auction.description}

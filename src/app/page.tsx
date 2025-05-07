@@ -1,10 +1,6 @@
 import { Container, Typography, Box, Grid, Card, CardContent, Button, Stack, Chip, Divider } from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
-import CodeIcon from "@mui/icons-material/Code";
-import JavascriptIcon from "@mui/icons-material/Javascript";
-import StorageIcon from "@mui/icons-material/Storage";
-import WebIcon from "@mui/icons-material/Web";
 
 function FeatureCard({ title, description, icon }: { title: string; description: string; icon: string }) {
   return (
@@ -38,7 +34,6 @@ function FeatureCard({ title, description, icon }: { title: string; description:
   );
 }
 
-// TODO: add logos for each tech stack item
 function TechStackItem({ name, icon }: { name: string; icon: React.ReactElement }) {
   return (
     <Chip
@@ -48,6 +43,7 @@ function TechStackItem({ name, icon }: { name: string; icon: React.ReactElement 
       sx={{
         border: "1px solid rgba(0,0,0,0.12)",
         m: 0.5,
+        p: 1,
         "&:hover": {
           backgroundColor: "rgba(0,0,0,0.04)",
         },
@@ -61,32 +57,55 @@ export default function Home() {
     {
       title: "Real-time Bidding",
       description: "See bid updates instantly without refreshing the page, ensuring you never miss an opportunity.",
-      icon: "globe",
+      icon: "realtime",
     },
     {
       title: "Secure Accounts",
       description: "Firebase Authentication keeps your profile and bidding activity protected at all times.",
-      icon: "window",
+      icon: "secure",
     },
     {
       title: "Custom Auctions",
       description: "Create auctions with custom start and end dates, images, and detailed descriptions.",
-      icon: "file",
+      icon: "auction",
     },
     {
       title: "User Profiles",
       description: "Manage your personal details and track your auction activity from your dashboard.",
-      icon: "next",
+      icon: "userprofile",
     },
     {
       title: "Responsive Design",
       description: "Bid from any device with a fully responsive interface optimized for all screen sizes.",
-      icon: "vercel",
+      icon: "responsive",
     },
     {
       title: "Server-side Rendering",
       description: "Enjoy fast page loads and SEO benefits with Next.js server-side rendering.",
-      icon: "next",
+      icon: "server",
+    },
+  ];
+
+  const techStack = [
+    {
+      name: "Next.js",
+      icon: "nextjs",
+    },
+    {
+      name: "React",
+      icon: "react",
+    },
+    {
+      name: "Firebase",
+      icon: "firebase",
+    },
+    {
+      name: "Material UI",
+      icon: "mui",
+    },
+    {
+      name: "TypeScript",
+      icon: "typescript",
     },
   ];
 
@@ -195,11 +214,13 @@ export default function Home() {
             </Typography>
 
             <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 1 }}>
-              <TechStackItem name="Next.js" icon={<WebIcon />} />
-              <TechStackItem name="React" icon={<CodeIcon />} />
-              <TechStackItem name="Firebase" icon={<StorageIcon />} />
-              <TechStackItem name="Material UI" icon={<WebIcon />} />
-              <TechStackItem name="TypeScript" icon={<JavascriptIcon />} />
+              {techStack.map((item, index) => (
+                <TechStackItem
+                  key={index}
+                  name={item.name}
+                  icon={<Image src={`/${item.icon}.svg`} alt={item.name} width={20} height={20} />}
+                />
+              ))}
             </Box>
           </Box>
 
@@ -211,7 +232,7 @@ export default function Home() {
             </Typography>
             <Button
               component={Link}
-              href="/register"
+              href="/auctions"
               variant="contained"
               size="large"
               sx={{
