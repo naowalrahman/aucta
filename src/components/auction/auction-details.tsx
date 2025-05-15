@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { Auction, Bid, UserProfile } from "@/lib/database-types";
-import { createBid, getUserProfile } from "@/lib/database";
+import { Auction, Bid, UserProfile } from "@/lib/database/database-types";
+import { getUserProfile } from "@/lib/database/user";
+import { createBid } from "@/lib/database/bid";
 import {
   Box,
   Button,
@@ -91,7 +92,7 @@ export default function AuctionDetails({
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(getTimeRemaining(initialAuction.endDate));
-  const [isActive, setIsActive] = useState(initialAuction.status === "active" && initialAuction.endDate > Date.now());
+  const [isActive, setIsActive] = useState(initialAuction.endDate > Date.now());
 
   useEffect(() => {
     if (user?.uid) {
@@ -247,8 +248,8 @@ export default function AuctionDetails({
                   {auction.title}
                 </Typography>
                 <Chip
-                  label={auction.status}
-                  color={auction.status === "active" ? "success" : auction.status === "completed" ? "primary" : "error"}
+                  label={isActive ? "active" : "completed"}
+                  color={isActive ? "success" : "primary"}
                   sx={{ ml: 1 }}
                 />
               </Box>

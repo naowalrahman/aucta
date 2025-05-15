@@ -16,8 +16,8 @@ import {
   Alert,
 } from "@mui/material";
 import { useAuth } from "@/lib/auth-context";
-import { createAuction } from "@/lib/database";
-import { Auction } from "@/lib/database-types";
+import { createAuction } from "@/lib/database/auction";
+import { Auction } from "@/lib/database/database-types";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";

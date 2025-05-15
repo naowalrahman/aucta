@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { TextField, Button, Box, Alert } from "@mui/material";
 import { Save as SaveIcon } from "@mui/icons-material";
-import { createOrUpdateUserProfile } from "@/lib/database";
+import { createOrUpdateUserProfile } from "@/lib/database/user";
 
 export default function EditDisplayNameForm({
   userId,

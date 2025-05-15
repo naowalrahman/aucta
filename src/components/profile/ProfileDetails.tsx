@@ -1,5 +1,5 @@
 import { Card, CardContent, Typography, Grid } from "@mui/material";
-import { UserProfile } from "@/lib/database-types";
+import { UserProfile } from "@/lib/database/database-types";
 
 export default function ProfileDetails({ profile }: { profile: UserProfile }) {
   const formatDate = (timestamp: number) => {

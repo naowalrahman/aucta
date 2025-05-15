@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import { Container, Typography, Box, CircularProgress } from "@mui/material";
-import { getUserHostedAuctions, getUserParticipatedAuctions } from "@/lib/database";
-import { Auction } from "@/lib/database-types";
+import { getUserHostedAuctions } from "@/lib/database/auction";
+import { getUserParticipatedAuctions } from "@/lib/database/bid";
+import { Auction } from "@/lib/database/database-types";
 import DashboardClient from "@/components/dashboard/dashboard-client";
 import { getAuthData } from "@/components/auth-provider-wrapper";
 import AuctionsGrid from "@/components/auction/auction-grid";

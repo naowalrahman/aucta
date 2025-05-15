@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { Button, Box, CircularProgress, Grid } from "@mui/material";
-import { Auction } from "@/lib/database-types";
+import { Auction } from "@/lib/database/database-types";
 import AuctionCard from "@/components/auction/auction-card";
-import { loadMoreAuctions } from "@/lib/database"; // Import the server action directly
+import { loadMoreAuctions } from "@/lib/database/auction"; // Import the server action directly
 
 export default function AuctionsClient({ initialAuctions }: { initialAuctions: Auction[] }) {
   const [auctions, setAuctions] = useState<Auction[]>(initialAuctions);

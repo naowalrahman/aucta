@@ -1,4 +1,4 @@
-import { Auction } from "@/lib/database-types";
+import { Auction } from "@/lib/database/database-types";
 import { Grid } from "@mui/material";
 import AuctionCard from "./auction-card";
 

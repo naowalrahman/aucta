@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Typography, Box, Avatar, Button } from "@mui/material";
 import { Edit as EditIcon } from "@mui/icons-material";
 import EditDisplayNameForm from "./EditDisplayNameForm";
-import { UserProfile } from "@/lib/database-types";
+import { UserProfile } from "@/lib/database/database-types";
 
 export default function ProfileHeader({ profile, userId }: { profile: UserProfile; userId: string }) {
   const [isEditing, setIsEditing] = useState(false);

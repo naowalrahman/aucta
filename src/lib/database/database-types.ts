@@ -19,7 +19,7 @@ export type Auction = {
   createdBy: string;
   createdAt: number;
   updatedAt: number;
-  status: "active" | "completed" | "cancelled";
+  status?: "active" | "completed";
 };
 
 export type Bid = {

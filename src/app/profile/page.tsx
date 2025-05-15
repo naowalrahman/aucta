@@ -1,5 +1,5 @@
 import { Container, Paper, Divider, Alert } from "@mui/material";
-import { getUserProfile } from "@/lib/database";
+import { getUserProfile } from "@/lib/database/user";
 import { getAuthData } from "@/components/auth-provider-wrapper";
 import { redirect } from "next/navigation";
 import ProfileHeader from "@/components/profile/ProfileHeader";

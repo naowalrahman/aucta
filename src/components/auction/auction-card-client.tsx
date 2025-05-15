@@ -3,15 +3,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardMedia, Typography, Button, Box, Chip, CardActionArea } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { Auction } from "@/lib/database-types";
-
-type FormattedData = {
-  currentPrice: string;
-  startDate: string;
-  endDate: string;
-  statusColor: "success" | "primary" | "error" | "default";
-  isActive: boolean;
-};
+import { Auction } from "@/lib/database/database-types";
 
 export default function AuctionCardClient({
   auction,
@@ -19,7 +11,13 @@ export default function AuctionCardClient({
   placeholderImage,
 }: {
   auction: Auction;
-  formattedData: FormattedData;
+  formattedData: {
+    currentPrice: string;
+    startDate: string;
+    endDate: string;
+    statusColor: "success" | "primary";
+    isActive: boolean;
+  };
   placeholderImage: string;
 }) {
   const router = useRouter();
@@ -73,7 +71,12 @@ export default function AuctionCardClient({
             <Typography variant="h6" component="div" noWrap sx={{ flexGrow: 1 }}>
               {auction.title}
             </Typography>
-            <Chip label={auction.status} size="small" color={formattedData.statusColor} sx={{ ml: 1 }} />
+            <Chip
+              label={formattedData.isActive ? "active" : "completed"}
+              size="small"
+              color={formattedData.isActive ? "success" : "primary"}
+              sx={{ ml: 1 }}
+            />
           </Box>
 
           <Typography
