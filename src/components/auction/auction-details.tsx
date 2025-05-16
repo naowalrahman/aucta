@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth-context";
 import { Auction, Bid, UserProfile } from "@/lib/database/database-types";
 import { getUserProfile } from "@/lib/database/user";
 import { createBid } from "@/lib/database/bid";
+import { deleteAuction } from "@/lib/database/auction";
 import {
   Box,
   Button,
@@ -25,11 +26,17 @@ import {
   Avatar,
   Alert,
   InputAdornment,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PeopleIcon from "@mui/icons-material/People";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { onSnapshot, doc, collection, query, where, orderBy } from "firebase/firestore";
 import { clientDatabase as db } from "@/lib/firebase";
 
@@ -93,6 +100,9 @@ export default function AuctionDetails({
   const [success, setSuccess] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(getTimeRemaining(initialAuction.endDate));
   const [isActive, setIsActive] = useState(initialAuction.endDate > Date.now());
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   useEffect(() => {
     if (user?.uid) {
@@ -160,6 +170,24 @@ export default function AuctionDetails({
     return () => clearInterval(interval);
   }, [auction.endDate, isActive]);
 
+  const handleDeleteAuction = async () => {
+    if (!user?.uid) return;
+
+    setDeleteLoading(true);
+    setDeleteError(null);
+
+    try {
+      await deleteAuction(auction.id as string, user.uid);
+      router.prefetch("/auctions");
+      router.push("/auctions");
+    } catch (error) {
+      console.error("Error deleting auction:", error);
+      setDeleteError("Failed to delete auction. Please try again.");
+      setDeleteLoading(false);
+      setDeleteDialogOpen(false);
+    }
+  };
+
   const handleBidSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -224,9 +252,17 @@ export default function AuctionDetails({
 
   return (
     <Box>
-      <Button startIcon={<ArrowBackIcon />} onClick={() => router.back()} sx={{ mb: 3 }}>
-        Back to Auctions
-      </Button>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+        <Button startIcon={<ArrowBackIcon />} onClick={() => router.back()}>
+          Back to Auctions
+        </Button>
+
+        {user?.uid === auction.createdBy && (
+          <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => setDeleteDialogOpen(true)}>
+            Delete Auction
+          </Button>
+        )}
+      </Box>
 
       <Grid container spacing={4}>
         {/* Left column: Image and details */}
@@ -360,7 +396,7 @@ export default function AuctionDetails({
                         type="number"
                         autoComplete="off"
                         value={bidAmount}
-                        onChange={(e) => setBidAmount(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBidAmount(e.target.value)}
                         disabled={loading}
                         slotProps={{
                           input: {
@@ -426,6 +462,32 @@ export default function AuctionDetails({
           </Paper>
         </Grid>
       </Grid>
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        aria-labelledby="delete-auction-dialog-title"
+      >
+        <DialogTitle id="delete-auction-dialog-title">Delete Auction</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this auction? This action cannot be undone.
+          </DialogContentText>
+          {deleteError && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {deleteError}
+            </Alert>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)} disabled={deleteLoading}>
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteAuction} color="error" variant="contained" disabled={deleteLoading}>
+            {deleteLoading ? "Deleting..." : "Delete"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

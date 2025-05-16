@@ -130,13 +130,32 @@ export async function getPaginatedAuctions(
   startAfter?: { endDate: number } | FirebaseFirestore.DocumentSnapshot
 ) {
   try {
-    let query = database.collection("auctions").orderBy("endDate", "asc").limit(limit);
+    // First get active auctions (endDate > now), ordered by closest to ending
+    const now = Date.now();
+    let query = database.collection("auctions").where("endDate", ">", now).orderBy("endDate", "asc").limit(limit);
+
     if (startAfter) {
       query = query.startAfter(startAfter);
     }
+
     const snapshot = await query.get();
     const lastVisible = snapshot.docs.length > 0 ? snapshot.docs[snapshot.docs.length - 1] : null;
     const auctions = snapshot.docs.map((doc) => doc.data() as Auction);
+
+    // If we don't have enough active auctions, fetch some recently ended ones
+    if (auctions.length < limit && !startAfter) {
+      const recentEndedQuery = database
+        .collection("auctions")
+        .where("endDate", "<=", now)
+        .orderBy("endDate", "desc")
+        .limit(limit - auctions.length);
+
+      const recentEndedSnapshot = await recentEndedQuery.get();
+      const recentEndedAuctions = recentEndedSnapshot.docs.map((doc) => doc.data() as Auction);
+
+      auctions.push(...recentEndedAuctions);
+    }
+
     return {
       auctions,
       lastVisible,
