@@ -2,6 +2,11 @@ import { Container, Typography, Box, Grid, Card, CardContent, Button, Stack, Chi
 import Link from "next/link";
 import Image from "next/image";
 
+// Set this page to be statically rendered at build time.
+// This would happen normally but because we have middleware.ts
+// the default is server-rendered on demand.
+export const dynamic = "force-static";
+
 function FeatureCard({ title, description, icon }: { title: string; description: string; icon: string }) {
   return (
     <Card
