@@ -6,7 +6,7 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { clientApp } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { Alert, Box, Button, Container, Link as MuiLink, Paper, TextField, Typography } from "@mui/material";
-import { createOrUpdateUserProfile } from "@/lib/database";
+import { createOrUpdateUserProfile } from "@/lib/database/user";
 
 export default function Register() {
   const [email, setEmail] = useState("");
