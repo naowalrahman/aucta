@@ -58,7 +58,7 @@ export default function Navbar() {
             <Link href="/" passHref style={{ textDecoration: "none", color: "inherit" }}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Box sx={{ mr: 1 }}>
-                  <Image src="/logo.png" alt="Aucta Logo" width={36} height={36} />
+                  <Image src="/logo.png" alt="Aucta Logo" width={36} height={36} unoptimized />
                 </Box>
                 <Typography
                   variant="h6"
