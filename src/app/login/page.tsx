@@ -84,8 +84,6 @@ export default function Login() {
             sx={{
               mt: 2,
               py: 1.5,
-              bgcolor: "grey.700",
-              "&:hover": { bgcolor: "grey.800" },
             }}
           >
             Enter

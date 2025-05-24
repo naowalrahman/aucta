@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 import {
   AppBar,
@@ -16,7 +17,6 @@ import {
   Container,
   useMediaQuery,
   useTheme,
-  Avatar,
 } from "@mui/material";
 
 import {
@@ -57,13 +57,14 @@ export default function Navbar() {
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Link href="/" passHref style={{ textDecoration: "none", color: "inherit" }}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Avatar sx={{ bgcolor: "grey.800", mr: 1 }}>A</Avatar>
+                <Box sx={{ mr: 1 }}>
+                  <Image src="/logo.png" alt="Aucta Logo" width={36} height={36} />
+                </Box>
                 <Typography
                   variant="h6"
                   noWrap
                   sx={{
                     mr: 2,
-                    fontFamily: "var(--font-geist-sans)",
                     fontWeight: 700,
                     letterSpacing: ".1rem",
                     color: "inherit",

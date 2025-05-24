@@ -119,8 +119,6 @@ export default function Register() {
             sx={{
               mt: 2,
               py: 1.5,
-              bgcolor: "grey.700",
-              "&:hover": { bgcolor: "grey.800" },
             }}
           >
             {isLoading ? "Creating account..." : "Create an account"}
