@@ -420,9 +420,35 @@ export default function AuctionDetails({
                   )}
                 </>
               ) : (
-                <Alert severity="info" sx={{ mt: 2 }}>
-                  This auction has ended
-                </Alert>
+                <Box>
+                  <Alert severity="info" sx={{ mt: 2, mb: 2 }}>
+                    This auction has ended
+                  </Alert>
+                  {bids.length > 0 ? (
+                    <Box sx={{ mt: 2, p: 2, backgroundColor: 'rgba(46, 125, 50, 0.1)', borderRadius: 1 }}>
+                      <Typography variant="subtitle1" color="primary" gutterBottom>
+                        🏆 Auction Winner
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Avatar>
+                          <AccountCircleIcon />
+                        </Avatar>
+                        <Box>
+                          <Typography variant="body1" fontWeight="medium">
+                            {bids[0].userDisplayName || 'Anonymous'}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Winning Bid: {formatCurrency(bids[0].amount)}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  ) : (
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                      No bids were placed on this auction.
+                    </Typography>
+                  )}
+                </Box>
               )}
             </CardContent>
           </Card>

@@ -32,9 +32,11 @@ export default function AuctionCardClient({
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        transition: "transform 0.2s ease-in-out",
+        transition: "all 0.2s ease-in-out",
         transform: isHovered ? "translateY(-4px)" : "none",
         width: "100%",
+        borderRadius: 2,
+        overflow: "hidden",
       }}
     >
       <CardActionArea onClick={() => router.push(`/auctions/${auction.id}`)}>
@@ -97,7 +99,7 @@ export default function AuctionCardClient({
 
           <Box sx={{ mt: 2 }}>
             <Typography variant="body2" color="text.secondary">
-              Current Price:
+              {formattedData.isActive ? "Current Price:" : "Sell Price:"}
             </Typography>
             <Typography variant="h6" color="primary" fontWeight="bold">
               {formattedData.currentPrice}
