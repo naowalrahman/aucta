@@ -1,7 +1,5 @@
 # Aucta
 
-(Work in Progress)
-
 Aucta is a web platform for hosting and participating in real-time auctions. You can create auctions with start and end dates, provide a URL to an image of what you're auctioning, place bids, and see realtime updates to the bid price on the bid page!
 
 ## Features
