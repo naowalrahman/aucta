@@ -145,32 +145,28 @@ export default function Home() {
                 Create, bid, and track auctions in real-time with Aucta&apos;s modern platform
               </Typography>
               <Stack direction="row" spacing={2}>
-                <Button
-                  component={Link}
-                  href="/auctions"
-                  variant="contained"
-                  size="large"
-                  sx={{
-                    borderRadius: 2,
-                    px: 4,
-                    py: 1.5,
-                    background: "linear-gradient(90deg, #1a237e, #0288d1)",
-                    "&:hover": {
-                      background: "linear-gradient(90deg, #0d47a1, #039be5)",
-                    },
-                  }}
-                >
-                  Browse Auctions
-                </Button>
-                <Button
-                  component={Link}
-                  href="/register"
-                  variant="outlined"
-                  size="large"
-                  sx={{ borderRadius: 2, px: 4, py: 1.5 }}
-                >
-                  Sign Up or Login
-                </Button>
+                <Link href="/auctions" passHref legacyBehavior>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    sx={{
+                      borderRadius: 2,
+                      px: 4,
+                      py: 1.5,
+                      background: "linear-gradient(90deg, #1a237e, #0288d1)",
+                      "&:hover": {
+                        background: "linear-gradient(90deg, #0d47a1, #039be5)",
+                      },
+                    }}
+                  >
+                    Browse Auctions
+                  </Button>
+                </Link>
+                <Link href="/register" passHref legacyBehavior>
+                  <Button variant="outlined" size="large" sx={{ borderRadius: 2, px: 4, py: 1.5 }}>
+                    Sign Up or Login
+                  </Button>
+                </Link>
               </Stack>
             </Grid>
             <Grid>
@@ -235,23 +231,23 @@ export default function Home() {
             <Typography variant="h6" gutterBottom>
               Ready to start bidding?
             </Typography>
-            <Button
-              component={Link}
-              href="/auctions"
-              variant="contained"
-              size="large"
-              sx={{
-                mt: 2,
-                borderRadius: 2,
-                px: 4,
-                background: "linear-gradient(90deg, #1a237e, #0288d1)",
-                "&:hover": {
-                  background: "linear-gradient(90deg, #0d47a1, #039be5)",
-                },
-              }}
-            >
-              Browse Auctions
-            </Button>
+            <Link href="/auctions" passHref legacyBehavior>
+              <Button
+                variant="contained"
+                size="large"
+                sx={{
+                  mt: 2,
+                  borderRadius: 2,
+                  px: 4,
+                  background: "linear-gradient(90deg, #1a237e, #0288d1)",
+                  "&:hover": {
+                    background: "linear-gradient(90deg, #0d47a1, #039be5)",
+                  },
+                }}
+              >
+                Browse Auctions
+              </Button>
+            </Link>
           </Box>
         </Container>
       </Box>
